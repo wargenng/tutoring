@@ -1,11 +1,10 @@
 #include <iostream>
 #include <string>
-#include <stack>
 
 using namespace std;
 
-// Function to return precedence of operators
-int precedence(char op) {
+// Function to return order of operation
+int orderOfOperations(char op) {
     if (op == '+' || op == '-')
         return 1;
     if (op == '*' || op == '/')
@@ -14,32 +13,32 @@ int precedence(char op) {
 }
 
 // Function to convert infix expression to postfix
-string infixToPostfix(const string& infix) {
+string infixToPostfix(string infix) {
     string postfix;
-    char* stack = new char[infix.length()];
+    char stack[100];
     int top = -1;
 
     for (int i = 0; i < infix.length(); i++) {
-        char c = infix[i];
-        if (isdigit(c)) {
-            postfix += c;
-        } else if (c == '(') {
+        char current = infix[i];
+        if (isdigit(current)) {
+            postfix += current;
+        } else if (current == '(') {
             top++;
-            stack[top] = c;
-        } else if (c == ')') {
-            while (top >= 0 && stack[top] != '(') {
+            stack[top] = current;
+        } else if (current == ')') {
+            while (stack[top] != '(') {
                 postfix += stack[top];
                 top--;
             }
             top--; // Discard the '('
         } else {
             // Operator encountered
-            while (top >= 0 && precedence(c) <= precedence(stack[top])) {
+            while (top >= 0 && orderOfOperations(current) <= orderOfOperations(stack[top])) {
                 postfix += stack[top];
                 top--;
             }
             top++;
-            stack[top] = c;
+            stack[top] = current;
         }
     }
 
@@ -49,53 +48,44 @@ string infixToPostfix(const string& infix) {
         top--;
     }
 
-    delete[] stack;
     return postfix;
 }
 
 // Function to evaluate a postfix expression
 int evaluatePostfix(string postfix) {
-    int* stack = new int[postfix.length()]; // Dynamic array to act as a stack
+    int stack[100];
     int top = -1; // Index of the top element in the stack
 
-    for (size_t i = 0; i < postfix.length(); i++) {
-        char c = postfix[i];
-        if (isdigit(c)) {
+    for (int i = 0; i < postfix.length(); i++) {
+        char current = postfix[i];
+        if (isdigit(current)) {
             top++;
-            stack[top] = c - '0'; // Push operand onto the stack
+            stack[top] = current - '0'; // Push operand onto the stack
         } else {
-            int operand2 = stack[top]; // Pop top operand
+            int b = stack[top]; // Pop top operand
             top--;
-            int operand1 = stack[top]; // Pop next operand
+            int a = stack[top]; // Pop next operand
             top--;
 
-            switch (c) {
-                case '+':
-                    top++;
-                    stack[top] = operand1 + operand2; // Push result onto stack
-                    break;
-                case '-':
-                    top++;
-                    stack[top] = operand1 - operand2;
-                    break;
-                case '*':
-                    top++;
-                    stack[top] = operand1 * operand2;
-                    break;
-                case '/':
-                    top++;
-                    stack[top] = operand1 / operand2;
-                    break;
+            if (current == '+') {
+                top++;
+                stack[top] = a + b;
+            } else if (current == '-') {
+                top++;
+                stack[top] = a - b;
+            }else if (current == '*') {
+                top++;
+                stack[top] = a * b;
+            } else {
+                top++;
+                stack[top] = a / b;
             }
         }
     }
 
     int result = stack[top]; // Result is at the top of the stack
-    delete[] stack; // Free the dynamic array
     return result;
 }
-
-
 
 int main() {
     string infix;
