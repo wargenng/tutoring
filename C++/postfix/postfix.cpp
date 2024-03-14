@@ -2,6 +2,8 @@
 #include <string>
 #include <stack>
 
+using namespace std;
+
 // Function to return precedence of operators
 int precedence(char op) {
     if (op == '+' || op == '-')
@@ -12,47 +14,99 @@ int precedence(char op) {
 }
 
 // Function to convert infix expression to postfix
-std::string infixToPostfix(const std::string& infix) {
-    std::string postfix;
-    std::stack<char> stack;
+string infixToPostfix(const string& infix) {
+    string postfix;
+    char* stack = new char[infix.length()];
+    int top = -1;
 
-    for (char c : infix) {
+    for (int i = 0; i < infix.length(); i++) {
+        char c = infix[i];
         if (isdigit(c)) {
             postfix += c;
         } else if (c == '(') {
-            stack.push(c);
+            top++;
+            stack[top] = c;
         } else if (c == ')') {
-            while (!stack.empty() && stack.top() != '(') {
-                postfix += stack.top();
-                stack.pop();
+            while (top >= 0 && stack[top] != '(') {
+                postfix += stack[top];
+                top--;
             }
-            stack.pop(); // Discard the '('
+            top--; // Discard the '('
         } else {
             // Operator encountered
-            while (!stack.empty() && precedence(c) <= precedence(stack.top())) {
-                postfix += stack.top();
-                stack.pop();
+            while (top >= 0 && precedence(c) <= precedence(stack[top])) {
+                postfix += stack[top];
+                top--;
             }
-            stack.push(c);
+            top++;
+            stack[top] = c;
         }
     }
 
     // Pop remaining operators from stack
-    while (!stack.empty()) {
-        postfix += stack.top();
-        stack.pop();
+    while (top >= 0) {
+        postfix += stack[top];
+        top--;
     }
 
+    delete[] stack;
     return postfix;
 }
 
-int main() {
-    std::string infix;
-    std::cout << "Enter the infix expression: ";
-    std::cin >> infix;
+// Function to evaluate a postfix expression
+int evaluatePostfix(string postfix) {
+    int* stack = new int[postfix.length()]; // Dynamic array to act as a stack
+    int top = -1; // Index of the top element in the stack
 
-    std::string postfix = infixToPostfix(infix);
-    std::cout << "Postfix expression: " << postfix << std::endl;
+    for (size_t i = 0; i < postfix.length(); i++) {
+        char c = postfix[i];
+        if (isdigit(c)) {
+            top++;
+            stack[top] = c - '0'; // Push operand onto the stack
+        } else {
+            int operand2 = stack[top]; // Pop top operand
+            top--;
+            int operand1 = stack[top]; // Pop next operand
+            top--;
+
+            switch (c) {
+                case '+':
+                    top++;
+                    stack[top] = operand1 + operand2; // Push result onto stack
+                    break;
+                case '-':
+                    top++;
+                    stack[top] = operand1 - operand2;
+                    break;
+                case '*':
+                    top++;
+                    stack[top] = operand1 * operand2;
+                    break;
+                case '/':
+                    top++;
+                    stack[top] = operand1 / operand2;
+                    break;
+            }
+        }
+    }
+
+    int result = stack[top]; // Result is at the top of the stack
+    delete[] stack; // Free the dynamic array
+    return result;
+}
+
+
+
+int main() {
+    string infix;
+    cout << "Enter the infix expression: ";
+    cin >> infix;
+
+    string postfix = infixToPostfix(infix);
+    cout << "Postfix expression: " << postfix << endl;
+
+    int result = evaluatePostfix(postfix);
+    cout << "Result: " << result << endl;
 
     return 0;
 }
