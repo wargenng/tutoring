@@ -3,7 +3,13 @@
 
 using namespace std;
 
-// Function to return order of operation
+
+//check if a character is an operator
+bool isOperator(char c) {
+    return c == '+' || c == '-' || c == '*' || c == '/';
+}
+
+//check order of operation
 int orderOfOperations(char op) {
     if (op == '+' || op == '-')
         return 1;
@@ -12,37 +18,70 @@ int orderOfOperations(char op) {
     return 0;
 }
 
-// Function to convert infix expression to postfix
+//convert infix expression to postfix
 string infixToPostfix(string infix) {
     string postfix;
     char stack[100];
     int top = -1;
+    bool previousDigit = false;
+    bool previousOperator = false;
 
     for (int i = 0; i < infix.length(); i++) {
         char current = infix[i];
         if (isdigit(current)) {
+            if(previousDigit) {
+                cout << "MULTIPLE DIGITS IN A ROW" << endl;
+                return "ERROR";
+            }
             postfix += current;
+            previousOperator = false;
+            previousDigit = true;
         } else if (current == '(') {
             top++;
             stack[top] = current;
+            previousOperator = false;
+            previousDigit = false;
         } else if (current == ')') {
-            while (stack[top] != '(') {
+            if (top < 0 || stack[top] != '(') {
+                cout << "INVALID PARENTHESIS" << endl;
+                return "ERROR";
+            }
+            while (top >= 0 && stack[top] != '(') {
                 postfix += stack[top];
                 top--;
             }
-            top--; // Discard the '('
-        } else {
-            // Operator encountered
+             if (top < 0) {
+                cout << "INVALID PARENTHESIS" << endl;
+                return "ERROR";
+            }
+            top--; 
+            previousOperator = false;
+            previousDigit = false;
+        } else if (isOperator(current)) {
+            if(previousOperator) {
+                cout << "MULTIPLE OPERATORS IN A ROW" << endl;
+                return "ERROR";
+            }
             while (top >= 0 && orderOfOperations(current) <= orderOfOperations(stack[top])) {
                 postfix += stack[top];
                 top--;
             }
             top++;
             stack[top] = current;
+            previousOperator = true;
+            previousDigit = false;
+        } else {
+            cout << "BAD INPUT" << endl;
+            return "ERROR";
         }
     }
 
-    // Pop remaining operators from stack
+     if (top >= 0 && stack[top] == '(') {
+        cout << "INVALID PARENTHESIS" << endl;
+                return "ERROR";
+        }
+
+    //pop remaining operators from stack
     while (top >= 0) {
         postfix += stack[top];
         top--;
@@ -51,8 +90,8 @@ string infixToPostfix(string infix) {
     return postfix;
 }
 
-// Function to evaluate a postfix expression
-int evaluatePostfix(string postfix) {
+//evaluate a postfix expression
+int calculatePostfix(string postfix) {
     int stack[100];
     int top = -1; // Index of the top element in the stack
 
@@ -93,9 +132,12 @@ int main() {
     cin >> infix;
 
     string postfix = infixToPostfix(infix);
+
+    if (postfix == "ERROR") return 0;
+
     cout << "Postfix expression: " << postfix << endl;
 
-    int result = evaluatePostfix(postfix);
+    int result = calculatePostfix(postfix);
     cout << "Result: " << result << endl;
 
     return 0;
