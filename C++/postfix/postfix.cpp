@@ -5,8 +5,8 @@ using namespace std;
 
 
 //check if a character is an operator
-bool isOperator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/';
+bool isOperator(char current) {
+    return current == '+' || current == '-' || current == '*' || current == '/';
 }
 
 //check order of operation
