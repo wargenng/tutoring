@@ -42,10 +42,6 @@ string infixToPostfix(string infix) {
             previousOperator = false;
             previousDigit = false;
         } else if (current == ')') {
-            if (top < 0 || stack[top] != '(') {
-                cout << "INVALID PARENTHESIS" << endl;
-                return "ERROR";
-            }
             while (top >= 0 && stack[top] != '(') {
                 postfix += stack[top];
                 top--;
@@ -75,7 +71,7 @@ string infixToPostfix(string infix) {
             return "ERROR";
         }
     }
-
+    
      if (top >= 0 && stack[top] == '(') {
         cout << "INVALID PARENTHESIS" << endl;
                 return "ERROR";
