@@ -1,0 +1,23 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s;
+}
+
+h1 {
+    font-size: 30px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+button {
+    background-color: slategray;
+    border: 0px;
+    border-radius: 5px;
+    padding: .5rem;
+    color: white;
+}

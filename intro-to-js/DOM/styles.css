@@ -1,0 +1,28 @@
+h1 {
+}
+
+h2 {
+  color: #0071e3;
+}
+
+p{
+  font-style: italic;
+}
+
+#course {
+  position: absolute;
+  top: -10px;
+  transition: top 0.5s;
+}
+
+#button{
+  background-color: #0071e3;
+}
+
+#button:hover{
+  background-color: red;
+} 
+
+body {
+  transition: background-color 0.5s, color 0.5s;
+}
