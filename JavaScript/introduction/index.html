@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="main">
+            <h1>Introduction to Javascript!</h1>
+            <h2>welcome to the class. your tutor is Wargen</h2>
+            <div id="Lesson1">
+                <h3>
+                    Lesson 1: Introduction to JavaScript and Development
+                    Environment
+                </h3>
+                <p id="objective">
+                    Objective: Understand the role of JavaScript in web
+                    development and set up the development environment.
+                </p>
+                <p id="topics">Topics:</p>
+                <li>History and Overview of JavaScript</li>
+                <li>Understanding Client-side vs. Server-side JavaScript</li>
+                <li>
+                    Setting up a Development Environment (Text Editor, Browser
+                    DevTools)
+                </li>
+                <li>Basic Syntax and Statements</li>
+                <li>Writing Your First JavaScript Program: 'Hello, World!'</li>
+            </div>
+            <button id="button" onclick="showLessonMaterial()">hide</button>
+
+            <div id="Lesson2">
+                <h3>Lesson 2: Control Flow and Functions</h3>
+                <p id="objective">
+                    Objective: Learn how to control program flow and write
+                    reusable code with functions.
+                </p>
+                <p id="topics">Topics:</p>
+                <li>Conditional Statements (if, else, switch)</li>
+                <li>Loops (for, while, do-while)</li>
+                <li>Functions: Declaration, Invocation, and Scope</li>
+                <li>Arrow Functions</li>
+                <li>Practical Examples of Functions</li>
+            </div>
+        </div>
+        <script>
+            let isShowing = true;
+            function showLessonMaterial() {
+                //querying for our main div
+                let main = document.getElementById("Lesson1");
+
+                //querying for our button
+                let button = document.getElementById("button");
+
+                if (!isShowing) {
+                    //setting our paragraph
+                    let objective = document.createElement("p");
+                    objective.id = "objective";
+                    objective.innerHTML =
+                        "Objective: Understand the role of JavaScript in web development and set up the development environment.";
+
+                    //appending to main
+                    main.appendChild(objective);
+
+                    //set button name
+                    button.innerHTML = "hide";
+
+                    //set is showing
+                    isShowing = true;
+                } else {
+                    let objective = document.getElementById("objective");
+                    main.removeChild(objective);
+
+                    //set button name
+                    button.innerHTML = "show";
+
+                    //set is showing
+                    isShowing = false;
+                }
+            }
+        </script>
+    </body>
+</html>
