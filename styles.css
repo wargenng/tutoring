@@ -1,0 +1,34 @@
+.navbar {
+  display: flex;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.card {
+  width: 80%;
+  height: 4rem;
+  background-color: antiquewhite;
+  margin-bottom: 10px;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+#todo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+#search {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  right: 1rem;
+  top:3rem;
+  opacity: 0;
+}

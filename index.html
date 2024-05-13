@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="styles.css" />
+        <title>To Do Application</title>
+    </head>
+    <body>
+        <nav class="navbar">
+            <div>to do application</div>
+            <div class="grow"></div>
+            <input
+                class="input"
+                value="{currentInput()}"
+                oninput="{handleInput}"
+            />
+            <button onclick="toggleSearch()">search</button>
+            <div id="search">
+                <button onclick="allTodos()">all info</button>
+                <button onclick="findUnfinishedTodos()">
+                    sort by unfinished
+                </button>
+                <button onclick="findFinishedTodos()">sort by finished</button>
+                <button onclick="searchByUser(2)">sort by Ervin Howell</button>
+                <button onclick="searchByUser(3)">sort by user 3</button>
+            </div>
+        </nav>
+        <div id="todo"></div>
+        <script src="script.js"></script>
+    </body>
+</html>
