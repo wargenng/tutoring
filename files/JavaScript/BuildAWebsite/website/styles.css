@@ -1,6 +1,7 @@
 body {
   background-color: rgba(18, 18, 19);
   color: white;
+  transition: background-color 0.5s, color 0.5s;
   display: flex;
   align-items: center;
   justify-content: center;
