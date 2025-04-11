@@ -2,7 +2,6 @@
 require("dotenv").config();
 const pg = require("pg");
 const uuid = require("uuid");
-const axios = require("axios"); // We'll use axios to call the Discogs API
 
 // Connect to PostgreSQL using DATABASE_URL from the .env file (or a default value)
 const client = new pg.Client(
@@ -112,26 +111,26 @@ const fetchProducts = async () => {
   - For each release, calls the Discogs API and maps desired fields into a product.
   - Inserts the product into the products table.
 */
+// Using native fetch in Node.js (v18+)
 const seedDiscogsProducts = async (releaseIDs) => {
     for (const releaseId of releaseIDs) {
         try {
-            // Fetch release data from the Discogs API
-            const response = await axios.get(
+            const response = await fetch(
                 `https://api.discogs.com/releases/${releaseId}`
             );
-            const release = response.data;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const release = await response.json();
 
-            // Map Discogs fields to product fields.
+            // Map Discogs fields to your product schema.
             const title = release.title || "Untitled";
-            // Create a description that might combine a few fields.
             const description = `Released: ${
                 release.released || "Unknown"
             }, Year: ${release.year || "Unknown"}, Artist: ${
-                release.artists && release.artists.length > 0
-                    ? release.artists[0].name
-                    : "Unknown"
+                release.artists?.[0]?.name || "Unknown"
             }`;
-            const price = 9.99; // Placeholder price; in real life, you may calculate or fetch this.
+            const price = 9.99; // Placeholder
             const image =
                 release.images && release.images.length > 0
                     ? release.images[0].uri
@@ -140,9 +139,10 @@ const seedDiscogsProducts = async (releaseIDs) => {
                 release.genres && release.genres.length > 0
                     ? release.genres[0]
                     : "Unknown";
-            const stock = 100; // Placeholder stock
+            const stock = 100; // Placeholder
 
-            const product = await createProduct({
+            // Insert into your database (using a createProduct function)
+            await createProduct({
                 name: title,
                 description,
                 price,
@@ -150,7 +150,7 @@ const seedDiscogsProducts = async (releaseIDs) => {
                 category,
                 stock,
             });
-            console.log(`Inserted product: ${product.name}`);
+            console.log(`Inserted product: ${title}`);
         } catch (error) {
             console.error(`Error seeding release ${releaseId}:`, error.message);
         }
