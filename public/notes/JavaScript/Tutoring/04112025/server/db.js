@@ -130,7 +130,7 @@ const seedDiscogsProducts = async (releaseIDs) => {
             }, Year: ${release.year || "Unknown"}, Artist: ${
                 release.artists?.[0]?.name || "Unknown"
             }`;
-            const price = 9.99; // Placeholder
+            const price = release.lowest_price || 9.99; // Placeholder
             const image =
                 release.images && release.images.length > 0
                     ? release.images[0].uri
